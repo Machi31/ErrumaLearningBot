@@ -19,7 +19,8 @@ def unity_topics(message):
     item2 = types.KeyboardButton("Создание первого проекта")
     item3 = types.KeyboardButton("Добавление объектов на сцену")
     item4 = types.KeyboardButton("Создание первого скрипта (передвижение)")
-    markup.add(item1, item2, item3, item4)
+    item5 = types.KeyboardButton("Назад")
+    markup.add(item1, item2, item3, item4, item5)
     bot.send_message(message.chat.id, "Вы выбрали Unity. Какую тему хотите изучить?", reply_markup=markup)
 
 # ! Далее обработчик команд внутри темы Unity
@@ -80,13 +81,13 @@ def unity_location(message):
 
 def unity_final(message):
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    item1 = types.KeyboardButton("Назад")
+    item1 = types.KeyboardButton("В меню")
     markup.add(item1)
     bot.send_message(message.chat.id,
         "Вот и всё. Теперь вы можете создавать абсолютно любые проекты, творить в них что угодно и становиться знаменитым разработчиком! =)", reply_markup=markup)
-    bot.register_next_step_handler(message, back_to_main_menu)
+    bot.register_next_step_handler(message, back_to_menu_unity)
 
-def back_to_main_menu(message):
+def back_to_menu_unity(message):
     unity_topics(message)
 
 # * Тема "Создание первого проекта"
@@ -113,28 +114,48 @@ def first_project(message):
 
 def unity_selected(message):
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    item1 = types.KeyboardButton("Назад")
+    item1 = types.KeyboardButton("В меню")
     markup.add(item1)
     bot.send_message(message.chat.id,
         "После выбора проекта необходимо дать имя проекту *(изначально это My project)*, выбрать папку проекта и нажать на кнопку *Create project*.", reply_markup=markup)
-    bot.register_next_step_handler(message, back_to_main_menu)
+    bot.register_next_step_handler(message, back_to_menu_unity)
 
-def back_to_main_menu(message):
+def back_to_menu_unity(message):
     unity_topics(message)
 
 # * Тема "Добавление объектов на сцену"
-@bot.message_handler(func=lambda message: message.text == "Добавление объектов на сцену")
+@bot.message_handler(func=lambda message: message.text == 'Добавление объектов на сцену')
 def add_objects(message):
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    item1 = types.KeyboardButton("Назад")
+    item1 = types.KeyboardButton("В меню")
     markup.add(item1)
     photo = open('D:\\Программирование\\Python\\Projects\\ErrumaLearningBot\\img\\unityObjects.png', 'rb')
     bot.send_photo(message.chat.id, photo, 
         caption="Для добавления объектов на сцену необходимо нажать правой кнопкой мыши по *окну иерархии (Hierarchy)* и выбрать какой именно объект вы хотите создать",
     parse_mode='Markdown', reply_markup=markup)
-    bot.register_next_step_handler(message, back_to_main_menu)
+    bot.register_next_step_handler(message, back_to_menu_unity)
 
-def back_to_main_menu(message):
+def back_to_menu_unity(message):
     unity_topics(message)
+
+# * Тема "Создание первого скрипта"
+@bot.message_handler(func=lambda message: message.text == 'Создание первого скрипта')
+def first_script(message):
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    item1 = types.KeyboardButton("В меню")
+    markup.add(item1)
+    photo = open('D:\\Программирование\\Python\\Projects\\ErrumaLearningBot\\img\\unityObjects.png', 'rb')
+    bot.send_photo(message.chat.id, photo, 
+        caption="По аналогии с созданием объектов на сцене, чтобы создать скрипт необходимо нажать правой кнопкой мыши по папкам внизу экрана, выбрать *Create* и найти C# Script.",
+    parse_mode='Markdown', reply_markup=markup)
+    bot.register_next_step_handler(message, back_to_menu_unity)
+
+def back_to_menu_unity(message):
+    unity_topics(message)
+
+# ! Обработчик команды "Назад"
+@bot.message_handler(func=lambda message: message.text == 'Назад')
+def back_to_main_menu(message):
+    startBot(message)
 
 bot.polling(none_stop=True)
