@@ -1,7 +1,7 @@
 import telebot
 from telebot import types
 
-bot = telebot.TeleBot('TOKEN')
+bot = telebot.TeleBot('6885740367:AAEbT6dXTieIxCGnPwWttMOwoVfPrjxgrDQ')
 
 @bot.message_handler(commands=['start'])
 def startBot(message):
@@ -18,7 +18,7 @@ def unity_topics(message):
     item1 = types.KeyboardButton("Установка Unity")
     item2 = types.KeyboardButton("Создание первого проекта")
     item3 = types.KeyboardButton("Добавление объектов на сцену")
-    item4 = types.KeyboardButton("Создание первого скрипта (передвижение)")
+    item4 = types.KeyboardButton("Создание первого скрипта")
     item5 = types.KeyboardButton("Назад")
     markup.add(item1, item2, item3, item4, item5)
     bot.send_message(message.chat.id, "Вы выбрали Unity. Какую тему хотите изучить?", reply_markup=markup)
@@ -129,9 +129,11 @@ def add_objects(message):
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item1 = types.KeyboardButton("В меню")
     markup.add(item1)
-    photo = open('D:\\Программирование\\Python\\Projects\\ErrumaLearningBot\\img\\unityObjects.png', 'rb')
-    bot.send_photo(message.chat.id, photo, 
-        caption="Для добавления объектов на сцену необходимо нажать правой кнопкой мыши по *окну иерархии (Hierarchy)* и выбрать какой именно объект вы хотите создать",
+    photo = open('D:\\Программирование\\Python\\Projects\\ErrumaLearningBot\\img\\unityObjectScene.png', 'rb')
+    photo1 = open('D:\\Программирование\\Python\\Projects\\ErrumaLearningBot\\img\\unityObjectCreate.png', 'rb')
+    bot.send_photo(message.chat.id, photo)
+    bot.send_photo(message.chat.id, photo1,
+    caption="Для добавления объектов на сцену необходимо нажать правой кнопкой мыши по *окну иерархии (Hierarchy)* и выбрать какой именно объект вы хотите создать",
     parse_mode='Markdown', reply_markup=markup)
     bot.register_next_step_handler(message, back_to_menu_unity)
 
@@ -144,7 +146,7 @@ def first_script(message):
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item1 = types.KeyboardButton("В меню")
     markup.add(item1)
-    photo = open('D:\\Программирование\\Python\\Projects\\ErrumaLearningBot\\img\\unityObjects.png', 'rb')
+    photo = open('D:\\Программирование\\Python\\Projects\\ErrumaLearningBot\\img\\unityScripts.png', 'rb')
     bot.send_photo(message.chat.id, photo, 
         caption="По аналогии с созданием объектов на сцене, чтобы создать скрипт необходимо нажать правой кнопкой мыши по папкам внизу экрана, выбрать *Create* и найти C# Script.",
     parse_mode='Markdown', reply_markup=markup)
@@ -152,6 +154,45 @@ def first_script(message):
 
 def back_to_menu_unity(message):
     unity_topics(message)
+
+# ! Обработчик команд для C#
+@bot.message_handler(func=lambda message: message.text == 'C#')
+def CSharp_topics(message):
+    markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+    item1 = types.KeyboardButton("Типы данныз в C#")
+    item2 = types.KeyboardButton("Простейшие операции в C#")
+    item3 = types.KeyboardButton("Логические операции в C#")
+    item4 = types.KeyboardButton("Объявление методов в C#")
+    item5 = types.KeyboardButton("Назад")
+    markup.add(item1, item2, item3, item4, item5)
+    bot.send_message(message.chat.id, "Вы выбрали C#. Какую тему хотите изучить?", reply_markup=markup)
+
+# ! Далее обработчик команд внутри темы Unity
+# * Тема "Типы данныз в C#"
+@bot.message_handler(func=lambda message: message.text == 'Типы данныз в C#')
+def CSharp_types(message):
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    item1 = types.KeyboardButton("Далее")
+    markup.add(item1)
+    bot.send_message(message.chat.id, "В C# существует достаточно большое количество типов данных, такие как int, float, double, string, bool, массивы и прочее.", reply_markup=markup)
+    bot.register_next_step_handler(message, CSharp_example_int)
+
+def CSharp_example_int(message):
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    item1 = types.KeyboardButton("Далее")
+    markup.add(item1)
+    bot.send_message(message.chat.id, "*Int (integer)* - тип данных, который позволяет работать с целыми числами (1, 2, 3 и т.д.)."
+                    "Числа с плавающей точкой этот тип данных не поддерживает. Объявляется в коде так:"
+                    "```csharp\nint a = 1.0;\n```", parse_mode='Markdown', reply_markup=markup)
+    bot.register_next_step_handler(message, CSharp_example_float)
+
+def CSharp_example_float(message):
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    item1 = types.KeyboardButton("Далее")
+    markup.add(item1)
+    bot.send_message(message.chat.id, "*Float (floating point)* - тип данных, который позволяет работать с числами с плавающей точкой (1.0, 2.5, 3.14159 и т.д.)."
+                     "В коде объявляется так:\n```csharp\n float a = 1.0f;\n```", parse_mode='Markdown', reply_markup=markup)
+
 
 # ! Обработчик команды "Назад"
 @bot.message_handler(func=lambda message: message.text == 'Назад')
