@@ -1,8 +1,11 @@
-from settings import TG_TOKEN
 import telebot
 from telebot import types
 
-bot = telebot.TeleBot(TG_TOKEN)
+TOKEN = None
+
+with open("settings.txt") as f:
+    TOKEN = f.read().strip()
+bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def startBot(message):
@@ -160,7 +163,7 @@ def back_to_menu_unity(message):
 @bot.message_handler(func=lambda message: message.text == 'C#')
 def CSharp_topics(message):
     markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-    item1 = types.KeyboardButton("Типы данныз в C#")
+    item1 = types.KeyboardButton("Типы данных в C#")
     item2 = types.KeyboardButton("Простейшие операции в C#")
     item3 = types.KeyboardButton("Логические операции в C#")
     item4 = types.KeyboardButton("Объявление методов в C#")
@@ -170,7 +173,7 @@ def CSharp_topics(message):
 
 # ! Далее обработчик команд внутри темы Unity
 # * Тема "Типы данныз в C#"
-@bot.message_handler(func=lambda message: message.text == 'Типы данныз в C#')
+@bot.message_handler(func=lambda message: message.text == 'Типы данных в C#')
 def CSharp_types(message):
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item1 = types.KeyboardButton("Далее")
@@ -192,7 +195,57 @@ def CSharp_example_float(message):
     item1 = types.KeyboardButton("Далее")
     markup.add(item1)
     bot.send_message(message.chat.id, "*Float (floating point)* - тип данных, который позволяет работать с числами с плавающей точкой (1.0, 2.5, 3.14159 и т.д.)."
-                     "В коде объявляется так:\n```csharp\n float a = 1.0f;\n```", parse_mode='Markdown', reply_markup=markup)
+                     "В коде объявляется так:\n```csharp\nfloat a = 1.0f;\n```", parse_mode='Markdown', reply_markup=markup)
+    bot.register_next_step_handler(message, CSharp_example_double)
+    
+def CSharp_example_double(message):
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    item1 = types.KeyboardButton("Далее")
+    markup.add(item1)
+    bot.send_message(message.chat.id, "*Double* - тип данных, который похож на float, но позволяет проводить над числами сложные математические операции."
+                     "В коде объявляется так:\n```csharp\ndouble a = 1.0;\n```", parse_mode='Markdown', reply_markup=markup)
+    bot.register_next_step_handler(message, CSharp_example_string)
+    
+def CSharp_example_string(message):
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    item1 = types.KeyboardButton("Далее")
+    markup.add(item1)
+    bot.send_message(message.chat.id, "*String* - тип данных, который позволяет работать со строками. Так же есть похожий на него *char*, но он позволяет работать с символами."
+                     "В коде объявляются так:\n```csharp\nstring a = \"Пример строки\" //Строка - массив символов;\nchar b = 'C' //Символ (элемент строки)\n```", parse_mode='Markdown', reply_markup=markup)
+    bot.register_next_step_handler(message, CSharp_example_bool)
+    
+def CSharp_example_bool(message):
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    item1 = types.KeyboardButton("Далее")
+    markup.add(item1)
+    bot.send_message(message.chat.id, "*Bool (boolean)* - тип данных, который позволяет работать с булевыми переменными. Они могут принимать только 2 значения: true или false."
+                     "В коде объявляется так:\n```csharp\nbool a = false; //Изначально bool всегда равен false\n```", parse_mode='Markdown', reply_markup=markup)
+    bot.register_next_step_handler(message, CSharp_example_massive)
+    
+def CSharp_example_massive(message):
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    item1 = types.KeyboardButton("Далее")
+    markup.add(item1)
+    bot.send_message(message.chat.id, "*Массив* - тип данных, который позволяет работать с своеобразной таблицой значений. Массивы могут быть любого типа данных."
+                     "В коде объявляется так:\n```csharp\nint[] a = \{1, 3, 5, 7, 9, 11\};\n```", parse_mode='Markdown', reply_markup=markup)
+    bot.register_next_step_handler(message, CSharp_example_anything)
+    
+def CSharp_example_anything(message):
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    item1 = types.KeyboardButton("В меню")
+    markup.add(item1)
+    bot.send_message(message.chat.id, "В C# есть ещё большое количество типов данных, но основные преведены выше. Их будет достаточно чтобы написать свой первый код. "
+                     "Ниже есть подсказка, в которой вписаны все типы данных, которые мы описали. Сохраняй чтобы не потерять!\n"
+                     "```csharp\nint a = 1.0;\n"
+                     "float a = 1.0f;\n"
+                     "double a = 1.0;\n"
+                     "string a = \"Пример строки\" //Строка - массив символов;\nchar b = 'C' //Символ (элемент строки)\n"
+                     "bool a = false; //Изначально bool всегда равен false\n"
+                     "int[] a = \{1, 3, 5, 7, 9, 11\};\n```", parse_mode='Markdown', reply_markup=markup)
+    bot.register_next_step_handler(message, back_to_menu_csharp)
+    
+def back_to_menu_csharp(message):
+    CSharp_topics(message)
 
 
 # ! Обработчик команды "Назад"
